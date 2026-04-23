@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-watcher
+  namespace: kube-watcher
+  labels:
+    app: kube-watcher
+    environment: production
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-reader-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: kube-watcher
+  namespace: kube-watcher
+roleRef:
+  kind: ClusterRole
+  name: pod-reader-role
+  apiGroup: rbac.authorization.k8s.io
