@@ -17,11 +17,33 @@ spec:
         app: kube-watcher
     spec:
       serviceAccountName: kube-watcher
+      automountServiceAccountToken: true
       containers:
       - name: kube-watcher
-        image: rupolaso/kube-watcher-image:v1
+        image: rupolaso/kube-watcher-image:v10
+        env:
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: kube-watcher-config
+              key: API_URL
         ports:
         - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
 
 ---
 

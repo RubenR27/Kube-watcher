@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-watcher-config
+  namespace: kube-watcher
+data:
+  API_URL: "http://100.98.185.24:30007"

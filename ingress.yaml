@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kube-watcher-ingress
+  namespace: kube-watcher
+spec:
+  rules:
+    - host: kube-watcher.local
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: kube-watcher-service
+              port:
+                number: 8000

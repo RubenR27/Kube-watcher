@@ -2,7 +2,7 @@
 
 > A lightweight Kubernetes pod explorer with real-time WebSocket updates, built as a learning project to understand how Kubernetes, RBAC, and cloud-native observability work in practice.
 
-![Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Status](https://img.shields.io/badge/status-%20compleated-green)
 ![K3s](https://img.shields.io/badge/cluster-k3s-blue)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
@@ -171,6 +171,8 @@ kubectl get pods -w
 kubectl logs -f deployment/kube-watcher
 ```
 
+Backend URL stored in configMap deployed in the namespace, then injected in the frontend
+
 ### 5. (Optional) Configure Ingress
 
 ```bash
@@ -211,18 +213,45 @@ verbs: ["get", "list", "watch", "delete"]
 
 ---
 
+ 
+## 🖥️ Development with k9s
+ 
+[k9s](https://k9scli.io/) is a terminal UI that lets you inspect the cluster in real time while you develop:
+ 
+```bash
+# Install
+brew install derailed/k9s/k9s   # macOS
+# or download the binary from https://k9scli.io
+ 
+# Launch
+k9s --namespace default
+```
+ 
+Useful shortcuts:
+ 
+| Key | Action |
+|---|---|
+| `:pods` | View all pods |
+| `l` | View logs for the selected pod |
+| `d` | Describe the pod |
+| `ctrl+d` | Delete the pod |
+| `esc` | Go back |
+ 
+---
+
 ## 🗺️ Roadmap
 
 - [x] REST API with FastAPI to list pods
 - [x] RBAC with ServiceAccount and minimal permissions
 - [x] Dockerfile and deployment on k3s
-- [ ] Web frontend with pod table and color-coded status
-- [ ] WebSocket watcher (real-time updates)
-- [ ] Delete pod button from the UI
-- [ ] Ingress for access via `kube-watcher.local`
-- [ ] livenessProbe and readinessProbe
-- [ ] Namespace filter in the UI
-- [ ] Pod log viewer from the UI
+- [x] Web frontend with pod table and color-coded status
+- [x] WebSocket watcher (real-time updates)
+- [x] Delete pod button from the UI
+- [x] livenessProbe and readinessProbe
+- [x] Namespace filter in the UI
+- [x] Pod log viewer from the UI
+- [x] Deployed frontend in cluster
+- [x] Ingress for access via `kube-watcher.local`
 
 ---
 

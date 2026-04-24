@@ -13,8 +13,8 @@ metadata:
   name: pod-reader-role
 rules:
 - apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list"]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch", "delete"]
 
 ---
 

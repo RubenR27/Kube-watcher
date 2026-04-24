@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kube-watcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/frontend/styles.css">
+</head>
+<body>
+<div id="toast-container"></div>
+
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10" stroke="#4f9cf9"/>
+          <path d="M12 2l7.5 4.5v9L12 20l-7.5-4.5v-9L12 2z" stroke="#7c3aed"/>
+          <circle cx="12" cy="12" r="3" fill="#4f9cf9"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1>kube-watcher</h1>
+        <div class="tagline">Cluster: k3s &nbsp;·&nbsp; Pod Explorer</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="ws-status">
+        <div class="ws-dot" id="ws-dot"></div>
+        <span id="ws-label">connecting...</span>
+      </div>
+      <button class="btn" id="btn-refresh" onclick="loadPods()">
+        <span class="icon-refresh">↻</span> Refresh
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats" id="stats-bar">
+    <div class="stat-card running"><div class="val" id="s-running">—</div><div class="lbl">Running</div></div>
+    <div class="stat-card pending"><div class="val" id="s-pending">—</div><div class="lbl">Pending</div></div>
+    <div class="stat-card failed" ><div class="val" id="s-failed" >—</div><div class="lbl">Failed</div></div>
+    <div class="stat-card"        ><div class="val" id="s-total"  >—</div><div class="lbl">Total pods</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <select class="ns-select" id="ns-select" onchange="applyFilters()">
+      <option value="">All namespaces</option>
+    </select>
+    <div class="filter-group" id="filter-group">
+      <button class="filter-btn active" onclick="setFilter('', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('Running', this)">Running</button>
+      <button class="filter-btn" onclick="setFilter('Pending', this)">Pending</button>
+      <button class="filter-btn" onclick="setFilter('Failed', this)">Failed</button>
+    </div>
+    <input class="search-box" id="search-box" type="text" placeholder="Search pod name..." oninput="applyFilters()">
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('name')">Pod <span class="sort-arrow" id="sort-name">↕</span></th>
+          <th>Namespace</th>
+          <th onclick="sortBy('status')">Status <span class="sort-arrow" id="sort-status">↕</span></th>
+          <th>Ready</th>
+          <th onclick="sortBy('restarts')">Restarts <span class="sort-arrow" id="sort-restarts">↕</span></th>
+          <th>Node</th>
+          <th>Age</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="pods-tbody"></tbody>
+    </table>
+    <div class="empty" id="empty-state" style="display:none">
+      <div class="icon">📭</div>
+      No pods match the current filters
+    </div>
+  </div>
+
+  <!-- Confirm delete bar -->
+  <div class="confirm-strip" id="confirm-strip">
+    <span class="msg" id="confirm-msg"></span>
+    <button class="btn-confirm-yes" id="confirm-yes">Delete</button>
+    <button class="btn-confirm-no" onclick="cancelDelete()">Cancel</button>
+  </div>
+
+  <!-- Event log -->
+  <div class="event-log">
+    <div class="event-log-header">
+      <span>⚡ Live event stream</span>
+      <span id="event-count" style="color:var(--accent)">0 events</span>
+    </div>
+    <div class="event-log-body" id="event-log-body">
+      <div class="event-item"><span class="event-time">—</span><span style="color:var(--muted)">Waiting for WebSocket connection...</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Log drawer -->
+<div class="overlay" id="overlay" onclick="closeDrawer(event)">
+  <div class="drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <span>Logs</span>
+        <span class="tag" id="drawer-pod-name">—</span>
+        <span class="tag" id="drawer-ns-name">—</span>
+      </div>
+      <button class="drawer-close" onclick="closeDrawerDirect()">✕</button>
+    </div>
+    <div class="log-body" id="log-body">Loading...</div>
+  </div>
+</div>
+
+<script src="/frontend/code.js"></script>
+
+</body>
+</html>
