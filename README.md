@@ -11,7 +11,9 @@
 
 ## 📸 Screenshots
 
-> _Coming soon — screenshots of the dashboard, real-time watcher and k9s will be added here._
+<img width="1536" height="867" alt="image" src="https://github.com/user-attachments/assets/2b26eb51-c98a-41b2-a783-8e84cc162ae1" />
+<img width="1331" height="462" alt="image" src="https://github.com/user-attachments/assets/d3447884-2117-4855-8788-15b9811fe1c8" />
+
 
 ---
 
@@ -220,8 +222,7 @@ verbs: ["get", "list", "watch", "delete"]
  
 ```bash
 # Install
-brew install derailed/k9s/k9s   # macOS
-# or download the binary from https://k9scli.io
+brew install derailed/k9s/k9s   # Linux with brew installed
  
 # Launch
 k9s --namespace default
